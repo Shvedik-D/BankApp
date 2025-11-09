@@ -35,20 +35,20 @@ namespace BankAppServices
             account.Withdraw(amount);
         }
 
-        public void Transfer(Guid fromAccountId, Guid toAccountId, decimal amount)
-        {
-            var from = GetAccount(fromAccountId);
-            var to = GetAccount(toAccountId);
+        //public void Transfer(Guid fromAccountId, Guid toAccountId, decimal amount)
+        //{
+        //    var from = GetAccount(fromAccountId);
+        //    var to = GetAccount(toAccountId);
 
-            from.Withdraw(amount, $"Transfer to {to.OwnerName}");
-            to.Deposit(amount, $"Transfer from {from.OwnerName}");
-        }
+        //    from.Withdraw(amount, $"Transfer to {to.OwnerName}");
+        //    to.Deposit(amount, $"Transfer from {from.OwnerName}");
+        //}
 
-        public IReadOnlyList<Transaction> GetStatement(Guid accountId)
-        {
-            var account = GetAccount(accountId);
-            return account.Transactions.AsReadOnly();
-        }
+        //public IReadOnlyList<Transaction> GetStatement(Guid accountId)
+        //{
+        //    var account = GetAccount(accountId);
+        //    return account.Transactions.AsReadOnly();
+        //}
 
         private Account GetAccount(Guid id)
         {

@@ -6,8 +6,12 @@ using BankApp.Infrastructure;
 
 class Program
 {
-     static IBankRepository repo = new InMemoryBankRepository();
-     static IAccountService service = new AccountService();
+    static IAccountRepository accountRepo = new InMemoryAccount();
+    static ITransactionRepository transactionRepo = new InMemoryTransaction();
+
+    static IAccountService accountService = new AccountService();
+    static ITransferService transferService = new TransferService(accountRepo, transactionRepo);
+    static ITransactionService transactionService = new TransactionService(transactionRepo, accountRepo);
     static void Main(string[] args)
     {
         Console.WriteLine("=== Welcome to BankApp ===");
@@ -58,8 +62,13 @@ class Program
         }
 
         var type = (AccountType)typeInt;
-        var id = service.CreateAccount(type, name, deposit);
-        Console.WriteLine($"Account created. ID: {id}");
+
+        try
+        {
+            var id = accountService.CreateAccount(type, name, deposit);
+            Console.WriteLine($"Account created. ID: {id}");
+        }
+        catch (Exception ex) { Console.WriteLine($"Error: {ex.Message}"); }
     }
 
     static void Deposit()
@@ -76,7 +85,7 @@ class Program
 
         try
         {
-            service.Deposit(id.Value, amount);
+            accountService.Deposit(id.Value, amount);
             Console.WriteLine("Deposit successful.");
         }
         catch (Exception ex) { Console.WriteLine($"Error: {ex.Message}"); }
@@ -96,7 +105,7 @@ class Program
 
         try
         {
-            service.Withdraw(id.Value, amount);
+            accountService.Withdraw(id.Value, amount);
             Console.WriteLine("Withdrawal successful.");
         }
         catch (Exception ex) { Console.WriteLine($"Error: {ex.Message}"); }
@@ -127,7 +136,7 @@ class Program
 
         try
         {
-            service.Transfer(fromId, toId, amount);
+            transferService.Transfer(fromId, toId, amount);
             Console.WriteLine("Transfer successful.");
         }
         catch (Exception ex) { Console.WriteLine($"Error: {ex.Message}"); }
@@ -140,7 +149,7 @@ class Program
 
         try
         {
-            var statement = service.GetStatement(id.Value);
+            var statement = transactionService.GetStatement(id.Value);
             Console.WriteLine("\nTransaction History:");
             foreach (var tx in statement)
             {
@@ -163,17 +172,3 @@ class Program
 }
 
     
-        //var accountId = service.CreateAccount(AccountType.Checking, "Dasha", 1000m;
-        //Console.WriteLine($"Account created : {accountId}");
-
-        //service.Deposit(accountId, 500m);
-        //service.Withdraw(accountId, 200m);
-        
-        //var statement = service.GetStatement(accountId);
-        //Console.WriteLine("/nTransaction History: ");
-        //foreach (var tx in statement)
-        //{
-        //    Console.WriteLine($"{tx.Date:u} |{tx.Amount} | Balance: { tx.BalanceAfter} | { tx.Description}");
-        //}
-    
-

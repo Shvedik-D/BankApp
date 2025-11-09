@@ -12,7 +12,6 @@ namespace BankApp.Core
         Guid CreateAccount(AccountType type, string ownerName, decimal initialDeposit);
         void Deposit(Guid accountId, decimal amount);
         void Withdraw(Guid accountId, decimal amount);
-        void Transfer(Guid fromAccountId, Guid toAccountId, decimal amount);
-        IReadOnlyList<Transaction> GetStatement(Guid accountId);
+        
     }
 }
